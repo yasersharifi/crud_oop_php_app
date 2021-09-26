@@ -1,4 +1,4 @@
-
+<?php include_once "template/header.php"; ?>
 <div class="container-xl">
     <div class="table-responsive">
         <div class="table-wrapper">
@@ -155,3 +155,4 @@
         </div>
     </div>
 </div>
+<?php include_once "template/footer.php"; ?>
