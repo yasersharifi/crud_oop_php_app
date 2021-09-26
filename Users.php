@@ -27,4 +27,13 @@ class Users extends DbConnection {
         }
         return false;
     }
+
+    public function delete($id) {
+        $sql = "DELETE FROM users WHERE id = $id";
+
+        if ($this->connection->query($sql) === true) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,10 +1,42 @@
+<?php include_once "config.php"; ?>
 <?php include_once "template/header.php"; ?>
 <?php
 require_once "Users.php";
 $users = new Users();
 $data = $users->get();
+
+// delete user
+if (isset($_GET["action"])) {
+    if ($_GET["action"] == "delete" && isset($_GET["user_id"])) {
+        $userId = $_GET["user_id"];
+        if ($users->delete($userId) == true) {
+            $_SESSION["msg"] = array(
+                "success",
+                "The employee deleted successfully.",
+            );
+            header("Location: index.php");
+            exit();
+        } else {
+            $_SESSION["msg"] = array(
+                "danger",
+                "Error: The employee not deleted.",
+            );
+            header("Location: index.php");
+            exit();
+        }
+    }
+}
 ?>
     <div class="container-xl">
+        <div class="row">
+            <div class="col-12">
+                <?php if (isset($_SESSION["msg"])): $msg = $_SESSION["msg"] ?>
+                    <div class="alert alert-<?= $msg[0]; ?> mt-3">
+                        <?= $msg[1]; unset($_SESSION["msg"]); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
         <div class="table-responsive">
             <div class="table-wrapper">
                 <div class="table-title">
@@ -54,10 +86,10 @@ $data = $users->get();
                             <button class="btn btn-<?= $item->statusClass; ?>"><?= $item->statusText; ?></button>
                         </td>
                         <td>
-                            <a href="edit.php?user_id=<?= $item->id; ?>" class="edit" data-toggle="modal"><i class="material-icons"
+                            <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
                                                                                              data-toggle="tooltip"
                                                                                              title="Edit">&#xE254;</i></a>
-                            <a href="delete.php?user_id=<?= $item->id; ?>" class="delete" data-toggle="modal"><i class="material-icons"
+                            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons"
                                                                                                  data-toggle="tooltip"
                                                                                                  title="Delete">&#xE872;</i></a>
                         </td>
@@ -165,10 +197,18 @@ $data = $users->get();
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-danger" value="Delete">
+                        <a href="#" class="btn btn-danger" id="deleteItem">Delete</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 <?php include_once "template/footer.php"; ?>
+<script>
+    $(document).ready(function () {
+        $(".delete").click(function (e) {
+            let userId = $(this).parent("td").parent("tr").children("td:nth-child(1)").children("span").children("input").val();
+            $("#deleteItem").attr("href", "index.php?action=delete&user_id=" + userId);
+        });
+    });
+</script>
