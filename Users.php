@@ -13,6 +13,14 @@ class Users extends DbConnection {
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                if ($row["status"] == "1") {
+                    $row["statusClass"] = "success";
+                    $row["statusText"] = "active";
+                } else {
+                    $row["statusClass"] = "danger";
+                    $row["statusText"] = "deactive";
+                }
+
                 $users[] = (object) $row;
             }
             return $users;

@@ -33,6 +33,7 @@ $data = $users->get();
                         <th>Email</th>
                         <th>Mobile</th>
                         <th>Address</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -49,6 +50,9 @@ $data = $users->get();
                         <td><?= $item->email; ?></td>
                         <td><?= $item->mobile; ?></td>
                         <td><?= $item->address; ?></td>
+                        <td>
+                            <button class="btn btn-<?= $item->statusClass; ?>"><?= $item->statusText; ?></button>
+                        </td>
                         <td>
                             <a href="edit.php?user_id=<?= $item->id; ?>" class="edit" data-toggle="modal"><i class="material-icons"
                                                                                              data-toggle="tooltip"
