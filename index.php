@@ -218,14 +218,51 @@ if (isset($_GET["action"])) {
             $("#deleteItem").attr("href", "index.php?action=delete&user_id=" + userId);
         });
     });
+</script>
+
+<script>
     // mange add data
     $(document).ready(function () {
+        // start check erroe
+        $("#addName").keyup(function () {
+            if ($(this).val() != "" && $(this).val().length > 3) {
+                $("#addName").removeClass("border border-danger");
+                $(".nameErrorMsg").remove();
+            }
+        });
+
+        $("#addEmail").keyup(function () {
+            if (ValidateEmail($(this).val())) {
+                $("#addEmail").removeClass("border border-danger");
+                $(".emailErrorMsg").remove();
+            }
+        });
+        // end check erroe
         $("#addUsers").on('click', function () {
             let fullName = $("#addName").val();
             let email = $("#addEmail").val();
             let mobile = $("#addMobile").val();
             let address = $("#addAddress").val();
             let status = $("#addStatus").val();
+
+            let flag = false;
+            if (fullName == "" || fullName == null) {
+                flag = true;
+                $("#addName").addClass("border border-danger");
+                $(".nameErrorMsg").remove();
+                $("#addName").after("<div class='text-danger mt-1 nameErrorMsg'>Please enter correct name.</div>");
+            }
+
+            if (ValidateEmail(email) == false) {
+                flag = true;
+                $("#addEmail").addClass("border border-danger");
+                $(".emailErrorMsg").remove();
+                $("#addEmail").after("<div class='text-danger mt-1 emailErrorMsg'>Please enter correct email.</div>");
+            }
+
+            if (flag == true) {
+                return false;
+            }
 
             $.ajax({
                 url: "add.php",
@@ -243,4 +280,13 @@ if (isset($_GET["action"])) {
             });
         });
     });
+
+    function ValidateEmail(mail)
+    {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+        {
+            return (true)
+        }
+        return (false)
+    }
 </script>
