@@ -29,7 +29,7 @@ if (isset($_GET["action"])) {
 ?>
     <div class="container-xl">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 errorMsg">
                 <?php if (isset($_SESSION["msg"])): $msg = $_SESSION["msg"] ?>
                     <div class="alert alert-<?= $msg[0]; ?> mt-3">
                         <?= $msg[1]; unset($_SESSION["msg"]); ?>
@@ -112,11 +112,11 @@ if (isset($_GET["action"])) {
             </div>
         </div>
     </div>
-    <!-- Edit Modal HTML -->
+    <!-- Add Modal HTML -->
     <div id="addEmployeeModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form id="addForm">
                     <div class="modal-header">
                         <h4 class="modal-title">Add Employee</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -124,24 +124,31 @@ if (isset($_GET["action"])) {
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" id="addName" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" class="form-control" required>
+                            <input type="email" id="addEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" id="addMobile" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label>Address</label>
-                            <textarea class="form-control" required></textarea>
+                            <textarea id="addAddress" class="form-control" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" class="form-control" required>
+                            <label>status</label>
+                            <select id="addStatus" class="form-control">
+                                <option value="1">Active</option>
+                                <option value="0">deActive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-success" value="Add">
+                        <button type="button" id="addUsers" class="btn btn-success">Add</button>
                     </div>
                 </form>
             </div>
@@ -209,6 +216,31 @@ if (isset($_GET["action"])) {
         $(".delete").click(function (e) {
             let userId = $(this).parent("td").parent("tr").children("td:nth-child(1)").children("span").children("input").val();
             $("#deleteItem").attr("href", "index.php?action=delete&user_id=" + userId);
+        });
+    });
+    // mange add data
+    $(document).ready(function () {
+        $("#addUsers").on('click', function () {
+            let fullName = $("#addName").val();
+            let email = $("#addEmail").val();
+            let mobile = $("#addMobile").val();
+            let address = $("#addAddress").val();
+            let status = $("#addStatus").val();
+
+            $.ajax({
+                url: "add.php",
+                type: "POST",
+                data: {fullName: fullName, email: email, mobile: mobile, address: address, status: status},
+                cache: false,
+                success: function(response){
+                    $("#addForm")[0].reset();
+                    $("#addEmployeeModal").css({display: "none"});
+                    location.reload();
+                },
+                error: function(xhr, status, error){
+                    console.log(xhr);
+                }
+            });
         });
     });
 </script>

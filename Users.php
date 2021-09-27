@@ -36,4 +36,20 @@ class Users extends DbConnection {
         }
         return false;
     }
+
+    public function add($data) {
+
+        $fullName = $data["fullName"];
+        $email = $data["email"];
+        $mobile = $data["mobile"];
+        $address = $data["address"];
+        $status = $data["status"];
+
+        $sql = "INSERT INTO users (full_name, email, mobile, address, status) VALUES ('$fullName', '$email', '$mobile', '$address', '$status')";
+
+        if ($this->connection->query($sql) === true) {
+            return true;
+        }
+        return false;
+    }
 }
