@@ -26,6 +26,28 @@ if (isset($_GET["action"])) {
         }
     }
 }
+
+// change status
+if (isset($_GET)) {
+    if (isset($_GET["action"])) {
+        if ($_GET["action"] == "changeStatus") {
+            $return = $users->changeStatus($_GET["userId"]);
+            if ($return == true) {
+                $_SESSION["msg"] = array(
+                    "success",
+                    "Changing status successfully.",
+                );
+            } else {
+                $_SESSION["msg"] = array(
+                    "danger",
+                    "Status is not changed.",
+                );
+            }
+            header("Location: index.php");
+            exit();
+        }
+    }
+}
 ?>
     <div class="container-xl">
         <div class="row">
@@ -83,7 +105,7 @@ if (isset($_GET["action"])) {
                         <td><?= $item->mobile; ?></td>
                         <td><?= $item->address; ?></td>
                         <td>
-                            <button class="btn btn-<?= $item->statusClass; ?>"><?= $item->statusText; ?></button>
+                            <a href="index.php?action=changeStatus&userId=<?= $item->id; ?>" class="text-white btn btn-<?= $item->statusClass; ?>"><?= $item->statusText; ?></a>
                         </td>
                         <td>
                             <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
