@@ -20,10 +20,9 @@ class DbConnection {
             if ($this->connection->error) {
                 return $this->connection;
             }
-            return false;
         }
 
-        return $this->connection;
+        return false;
 
     }
 }
