@@ -233,6 +233,7 @@ if (isset($_GET)) {
         </div>
     </div>
 <?php include_once "template/footer.php"; ?>
+<script src="assets/js/validateInput.js"></script>
 <script>
     $(document).ready(function () {
         $(".delete").click(function (e) {
@@ -302,13 +303,4 @@ if (isset($_GET)) {
             });
         });
     });
-
-    function ValidateEmail(mail)
-    {
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-        {
-            return (true)
-        }
-        return (false)
-    }
 </script>
