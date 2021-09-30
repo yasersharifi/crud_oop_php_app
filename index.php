@@ -255,11 +255,26 @@ if (isset($_GET)) {
         });
 
         $("#addEmail").keyup(function () {
-            if (ValidateEmail($(this).val())) {
+            if (ValidateEmail($(this).val()) == true) {
                 $("#addEmail").removeClass("border border-danger");
                 $(".emailErrorMsg").remove();
             }
         });
+
+        $("#addMobile").keyup(function () {
+            if (ValidateMobile($(this).val()) == true) {
+                $("#addMobile").removeClass("border border-danger");
+                $(".mobileErrorMsg").remove();
+            }
+        });
+
+        $("#addAddress").keyup(function () {
+            if (IsRequired($(this).val()) == true) {
+                $("#addAddress").removeClass("border border-danger");
+                $(".addressErrorMsg").remove();
+            }
+        });
+
         // end check erroe
         $("#addUsers").on('click', function () {
             let fullName = $("#addName").val();
@@ -281,6 +296,20 @@ if (isset($_GET)) {
                 $("#addEmail").addClass("border border-danger");
                 $(".emailErrorMsg").remove();
                 $("#addEmail").after("<div class='text-danger mt-1 emailErrorMsg'>Please enter correct email.</div>");
+            }
+
+            if (ValidateMobile(mobile) == false) {
+                flag = true;
+                $("#addMobile").addClass("border border-danger");
+                $(".mobileErrorMsg").remove();
+                $("#addMobile").after("<div class='text-danger mt-1 mobileErrorMsg'>Please enter correct mobile.</div>");
+            }
+
+            if (IsRequired(address) == false) {
+                flag = true;
+                $("#addAddress").addClass("border border-danger");
+                $(".addressErrorMsg").remove();
+                $("#addAddress").after("<div class='text-danger mt-1 addressErrorMsg'>Please enter address.</div>");
             }
 
             if (flag == true) {
