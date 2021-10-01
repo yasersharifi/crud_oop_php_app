@@ -3,7 +3,13 @@
 <?php
 require_once "Users.php";
 $users = new Users();
-$data = $users->get();
+$page = 1;
+if (isset($_GET["page"])) {
+    $page = $_GET["page"];
+}
+
+$data = $users->get($page)->data;
+$pagination = $users->get($page)->pagination;
 
 // delete user
 if (isset($_GET["action"])) {
@@ -121,15 +127,16 @@ if (isset($_GET)) {
                 </table>
                 <div class="clearfix">
                     <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                    <ul class="pagination">
-                        <li class="page-item disabled"><a href="#">Previous</a></li>
-                        <li class="page-item"><a href="#" class="page-link">1</a></li>
-                        <li class="page-item"><a href="#" class="page-link">2</a></li>
-                        <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                        <li class="page-item"><a href="#" class="page-link">4</a></li>
-                        <li class="page-item"><a href="#" class="page-link">5</a></li>
-                        <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                    </ul>
+                    <?= $pagination; ?>
+<!--                    <ul class="pagination">-->
+<!--                        <li class="page-item disabled"><a href="#">Previous</a></li>-->
+<!--                        <li class="page-item"><a href="#" class="page-link">1</a></li>-->
+<!--                        <li class="page-item"><a href="#" class="page-link">2</a></li>-->
+<!--                        <li class="page-item active"><a href="#" class="page-link">3</a></li>-->
+<!--                        <li class="page-item"><a href="#" class="page-link">4</a></li>-->
+<!--                        <li class="page-item"><a href="#" class="page-link">5</a></li>-->
+<!--                        <li class="page-item"><a href="#" class="page-link">Next</a></li>-->
+<!--                    </ul>-->
                 </div>
             </div>
         </div>

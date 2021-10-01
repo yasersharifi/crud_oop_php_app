@@ -9,10 +9,43 @@ class Users extends DbConnection {
         $this->table = "users";
     }
 
-    public function get() {
+    public function get($page) {
+        // validate page is number
+        if (filter_var($page, FILTER_VALIDATE_INT) == false) {
+            $page = 1;
+        }
+
+        $limit = 2;
+        $startFrom = ($page - 1) * $limit;
+
         $users = null;
-        $sql = "SELECT * FROM {$this->table}";
+        $sql = "SELECT * FROM {$this->table} ORDER BY id DESC LIMIT $startFrom, $limit";
         $result = $this->connection->query($sql);
+
+        // For pagination
+        $countSql = "SELECT COUNT(id) AS userCount FROM {$this->table}";
+        $countResult = $this->connection->query($countSql);
+        $totalRecords = $countResult->fetch_assoc()["userCount"];
+        $totalPages = ceil($totalRecords / $limit);
+
+
+        $previous = $page - 1;
+        $next = $page + 1;
+        $pageLinks = "<ul class='pagination'>";
+        if ($previous > 0) {
+            $pageLinks .= "<li class='page-item disabled'><a href='index.php?page=" .$previous. "'>Previous</a></li>";
+        }
+        for ($i = 1; $i <= $totalPages; $i++) {
+            $activeClass = "";
+            if ($page == $i) {$activeClass = "active";}
+            $pageLinks .= "<li class='page-item ".$activeClass."'>";
+            $pageLinks .= "<a href='index.php?page=".$i."' class='page-link'>$i</a>";
+            $pageLinks .= "</li>";
+        }
+        if ($next <= $totalPages) {
+            $pageLinks .= "<li class='page-item disabled'><a href='index.php?page=" .$next. "'>Next</a></li>";
+        }
+        $pageLinks .= "</ul>";
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -26,13 +59,13 @@ class Users extends DbConnection {
 
                 $users[] = (object) $row;
             }
-            return $users;
+            return (object) array("data" => $users, "pagination" => $pageLinks);
         }
         return false;
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM users WHERE id = $id";
+        $sql = "DELETE FROM {$this->table} WHERE id = $id";
 
         if ($this->connection->query($sql) === true) {
             return true;
@@ -48,7 +81,7 @@ class Users extends DbConnection {
         $address = $data["address"];
         $status = $data["status"];
 
-        $sql = "INSERT INTO users (full_name, email, mobile, address, status) VALUES ('$fullName', '$email', '$mobile', '$address', '$status')";
+        $sql = "INSERT INTO {$this->table} (full_name, email, mobile, address, status) VALUES ('$fullName', '$email', '$mobile', '$address', '$status')";
 
         if ($this->connection->query($sql) === true) {
             return true;
