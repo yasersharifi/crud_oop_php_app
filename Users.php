@@ -59,7 +59,13 @@ class Users extends DbConnection {
 
                 $users[] = (object) $row;
             }
-            return (object) array("data" => $users, "pagination" => $pageLinks);
+            $data = array(
+                "data" => $users,
+                "pagination" => $pageLinks,
+                "totalRecords" => $totalRecords,
+                "showRecords" => $result->num_rows
+            );
+            return (object) $data;
         }
         return false;
     }
