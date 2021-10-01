@@ -116,7 +116,7 @@ if (isset($_GET)) {
                             <a href="index.php?action=changeStatus&userId=<?= $item->id; ?>" class="text-white btn btn-<?= $item->statusClass; ?>"><?= $item->statusText; ?></a>
                         </td>
                         <td>
-                            <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons"
+                            <a href="#editEmployeeModal" id="<?= $item->id; ?>" class="edit" data-toggle="modal"><i class="material-icons"
                                                                                              data-toggle="tooltip"
                                                                                              title="Edit">&#xE254;</i></a>
                             <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons"
@@ -180,32 +180,40 @@ if (isset($_GET)) {
     <div id="editEmployeeModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form id="editForm">
                     <div class="modal-header">
                         <h4 class="modal-title">Edit Employee</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <input type="hidden" id="editId">
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" id="editName" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" class="form-control" required>
+                            <input type="email" id="editEmail" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" id="editMobile" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label>Address</label>
-                            <textarea class="form-control" required></textarea>
+                            <textarea id="editAddress" class="form-control" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" class="form-control" required>
+                            <label>status</label>
+                            <select id="editStatus" class="form-control">
+                                <option value="1">Active</option>
+                                <option value="0">deActive</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-info" value="Save">
+                        <button type="button" id="editUsers" class="btn btn-info">Edit</button>
                     </div>
                 </form>
             </div>
@@ -243,6 +251,7 @@ if (isset($_GET)) {
     });
 </script>
 
+<!-- start add data -->
 <script>
     // mange add data
     $(document).ready(function () {
@@ -333,3 +342,131 @@ if (isset($_GET)) {
         });
     });
 </script>
+<!-- end add data -->
+
+<!-- start edit data -->
+<script>
+    $(document).ready(function () {
+        // start read data with id from database
+        $(".edit").on('click', function (event) {
+            let userId = $(this).attr("id");
+            $.ajax({
+                url: "edit.php",
+                type: "POST",
+                data: {action: "getData", userId: userId},
+                cache: false,
+                success: function (response) {
+                    let data = JSON.parse(response);
+                    if (data["status"] == "ok") {
+                        let userInfo = data["data"];
+                        $("#editId").val(userInfo["id"]);
+                        $("#editName").val(userInfo["full_name"]);
+                        $("#editEmail").val(userInfo["email"]);
+                        $("#editMobile").val(userInfo["mobile"]);
+                        $("#editAddress").val(userInfo["address"]);
+
+                        $("#editStatus option").each(function () {
+                            let itemValue = $(this).val();
+                            if (itemValue == userInfo["status"]) {
+                                $(this).attr("selected", true)
+                            } else {
+                                $(this).attr("selected", false)
+                            }
+                        })
+                    }
+                }
+            });
+        });
+        // end read data with id from database
+
+        // start edit data
+        // start check erroe
+        $("#editName").keyup(function () {
+            if ($(this).val() != "" && $(this).val().length > 3) {
+                $("#editName").removeClass("border border-danger");
+                $(".editNameErrorMsg").remove();
+            }
+        });
+
+        $("#editEmail").keyup(function () {
+            if (ValidateEmail($(this).val()) == true) {
+                $("#editEmail").removeClass("border border-danger");
+                $(".editEmailErrorMsg").remove();
+            }
+        });
+
+        $("#editMobile").keyup(function () {
+            if (ValidateMobile($(this).val()) == true) {
+                $("#editMobile").removeClass("border border-danger");
+                $(".editMobileErrorMsg").remove();
+            }
+        });
+
+        $("#editAddress").keyup(function () {
+            if (IsRequired($(this).val()) == true) {
+                $("#editAddress").removeClass("border border-danger");
+                $(".editAddressErrorMsg").remove();
+            }
+        });
+
+        // end check erroe
+        $("#editUsers").on('click', function () {
+            let id = $("#editId").val();
+            let fullName = $("#editName").val();
+            let email = $("#editEmail").val();
+            let mobile = $("#editMobile").val();
+            let address = $("#editAddress").val();
+            let status = $("#editStatus").val();
+
+            let flag = false;
+            if (fullName == "" || fullName == null) {
+                flag = true;
+                $("#editName").addClass("border border-danger");
+                $(".editNameErrorMsg").remove();
+                $("#editName").after("<div class='text-danger mt-1 editNameErrorMsg'>Please enter correct name.</div>");
+            }
+
+            if (ValidateEmail(email) == false) {
+                flag = true;
+                $("#editEmail").addClass("border border-danger");
+                $(".editEmailErrorMsg").remove();
+                $("#editEmail").after("<div class='text-danger mt-1 editEmailErrorMsg'>Please enter correct email.</div>");
+            }
+
+            if (ValidateMobile(mobile) == false) {
+                flag = true;
+                $("#editMobile").addClass("border border-danger");
+                $(".editMobileErrorMsg").remove();
+                $("#editMobile").after("<div class='text-danger mt-1 editMobileErrorMsg'>Please enter correct mobile.</div>");
+            }
+
+            if (IsRequired(address) == false) {
+                flag = true;
+                $("#editAddress").addClass("border border-danger");
+                $(".editAddressErrorMsg").remove();
+                $("#editAddress").after("<div class='text-danger mt-1 editAddressErrorMsg'>Please enter address.</div>");
+            }
+
+            if (flag == true) {
+                return false;
+            }
+
+            $.ajax({
+                url: "edit.php",
+                type: "POST",
+                data: {action: "editData", id: id, fullName: fullName, email: email, mobile: mobile, address: address, status: status},
+                cache: false,
+                success: function(response){
+                    $("#editForm")[0].reset();
+                    $("#editEmployeeModal").css({display: "none"});
+                    location.reload();
+                },
+                error: function(xhr, status, error){
+                    console.log(xhr);
+                }
+            });
+        });
+        // end edit data
+    })
+</script>
+<!-- end edit data -->
