@@ -1,7 +1,7 @@
 // validate mobile function
 function ValidateMobile(mobile)
 {
-    if(/^\d{10}$/.test(mobile))
+    if(/^\d{11}$/.test(mobile))
         return true;
     return false;
 }
