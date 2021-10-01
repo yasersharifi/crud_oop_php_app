@@ -15,7 +15,7 @@ class Users extends DbConnection {
             $page = 1;
         }
 
-        $limit = 2;
+        $limit = 4;
         $startFrom = ($page - 1) * $limit;
 
         $users = null;
