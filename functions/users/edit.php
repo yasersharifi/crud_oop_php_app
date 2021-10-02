@@ -1,8 +1,8 @@
 <?php
-require_once "Users.php";
-$users = new Users();
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ) {
+require_once "./../../Users.php";
 
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ) {
+    $users = new Users();
     $response = [];
     #--- start get data ---#
     if (isset($_POST["action"]) && $_POST["action"] == "getData") {

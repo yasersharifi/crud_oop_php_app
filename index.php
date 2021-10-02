@@ -351,7 +351,7 @@ if (isset($_GET)) {
         $(".edit").on('click', function (event) {
             let userId = $(this).attr("id");
             $.ajax({
-                url: "edit.php",
+                url: "functions/users/edit.php",
                 type: "POST",
                 data: {action: "getData", userId: userId},
                 cache: false,
@@ -452,7 +452,7 @@ if (isset($_GET)) {
             }
 
             $.ajax({
-                url: "edit.php",
+                url: "functions/users/edit.php",
                 type: "POST",
                 data: {action: "editData", id: id, fullName: fullName, email: email, mobile: mobile, address: address, status: status},
                 cache: false,
