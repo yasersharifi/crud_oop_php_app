@@ -317,7 +317,7 @@ if (isset($_GET)) {
             }
 
             $.ajax({
-                url: "add.php",
+                url: "functions/users/add.php",
                 type: "POST",
                 data: {fullName: fullName, email: email, mobile: mobile, address: address, status: status},
                 cache: false,

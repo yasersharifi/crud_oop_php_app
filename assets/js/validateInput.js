@@ -1,4 +1,4 @@
-// validate mobile function
+// validate mobile functions
 function ValidateMobile(mobile)
 {
     if(/^\d{11}$/.test(mobile))
@@ -6,7 +6,7 @@ function ValidateMobile(mobile)
     return false;
 }
 
-// validate email function
+// validate email functions
 function ValidateEmail(mail)
 {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
