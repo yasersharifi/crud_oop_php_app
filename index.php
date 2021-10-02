@@ -77,7 +77,7 @@ if (isset($_GET)) {
                         <div class="col-sm-6">
                             <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i
                                         class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
-                            <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i
+                            <a href="#deleteAllEmployeeModal" class="btn btn-danger" data-toggle="modal"><i
                                         class="material-icons">&#xE15C;</i> <span>Delete</span></a>
                         </div>
                     </div>
@@ -104,7 +104,7 @@ if (isset($_GET)) {
                         <tr>
                         <td>
 							<span class="custom-checkbox">
-								<input type="checkbox" id="checkbox1" name="options[]" value="<?= $item->id; ?>">
+								<input type="checkbox" class="deleteAll" value="<?= $item->id; ?>">
 								<label for="checkbox1"></label>
 							</span>
                         </td>
@@ -235,6 +235,27 @@ if (isset($_GET)) {
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
                         <a href="#" class="btn btn-danger" id="deleteItem">Delete</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Delete All Modal HTML -->
+    <div id="deleteAllEmployeeModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Employee</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete these Records?</p>
+                        <p class="text-warning"><small>This action cannot be undone.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <a href="#" class="btn btn-danger" id="deleteAllItem">Delete</a>
                     </div>
                 </form>
             </div>
@@ -470,3 +491,25 @@ if (isset($_GET)) {
     })
 </script>
 <!-- end edit data -->
+
+<!-- start delete all item -->
+<script>
+    $(document).ready(function () {
+       $("#deleteAllItem").click(function () {
+           let checkedItem = [];
+           $(".deleteAll:checked").each(function () {
+               checkedItem.push($(this).val());
+           })
+           $.ajax({
+               url: "functions/users/deleteAll.php",
+               type: "POST",
+               data: {action: "deleteAll", data: checkedItem},
+               cache: false,
+               success: function (response) {
+                   location.reload();
+               }
+           })
+       });
+    });
+</script>
+<!-- end delete all item -->

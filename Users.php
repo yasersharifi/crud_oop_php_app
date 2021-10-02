@@ -80,6 +80,15 @@ class Users extends DbConnection {
         return false;
     }
 
+    public function deleteAll($whereIn) {
+        $sql = "DELETE FROM {$this->table} WHERE id IN ($whereIn)";
+
+        if ($this->connection->query($sql) === true) {
+            return true;
+        }
+        return false;
+    }
+
     public function add($data) {
 
         $fullName = $data["fullName"];
