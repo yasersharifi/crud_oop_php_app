@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "DbConnection.php";
 class Users extends DbConnection {
     private $table;
@@ -95,6 +96,22 @@ class Users extends DbConnection {
         return false;
     }
 
+    public function edit($data) {
+        $id = $data["id"];
+        $fullName = $data["fullName"];
+        $email = $data["email"];
+        $mobile = $data["mobile"];
+        $address = $data["address"];
+        $status = $data["status"];
+
+        $sql = "UPDATE {$this->table} SET full_name='$fullName', email='$email', mobile='$mobile', address='$address', status='$status' WHERE id=".$id;
+
+        if ($this->connection->query($sql) === true) {
+            return true;
+        }
+        return false;
+    }
+
     public function changeStatus($id) {
         $user = $this->findById($id);
 
@@ -113,7 +130,7 @@ class Users extends DbConnection {
 
     }
 
-    private function findById($id) {
+    public function findById($id) {
         $sql = "SELECT * FROM {$this->table} WHERE id= ". $id;
         $result = $this->connection->query($sql);
 
